@@ -1,0 +1,12 @@
+{
+  "name": "custom-node-boilerplate",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "cd ..\\..\\.. && python_embeded\\python.exe ComfyUI\\main.py",
+    "install": "..\\..\\..\\python_embeded\\python.exe -m pip install -r requirements.txt",
+    "dev": "cd ..\\..\\.. && python_embeded\\python.exe ComfyUI\\custom_nodes\\custom-node-boilerplate\\watcher.py"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
