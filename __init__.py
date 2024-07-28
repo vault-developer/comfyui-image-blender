@@ -26,15 +26,21 @@ class ImageBlender:
     FUNCTION = "blend"
     CATEGORY = "ImageBlender"
 
-    def blend(self, base_image: torch.Tensor, blend_image: torch.Tensor, blend_mode: str, mask = None) -> tuple:
+    def blend(self, base_image: torch.Tensor, blend_image: torch.Tensor, blend_mode: str, mask: torch.Tensor = None) -> tuple:
         blend_function = self.blend_functions.get(BlendModes(blend_mode), lambda x, y: x)
         result = blend_function(base_image, blend_image)
+
+        print(mask.shape)
 
         if mask is not None:
             # Ensure mask has the same number of channels as the images
             if mask.dim() == 3:
                 mask = mask.unsqueeze(-1).expand(-1, -1, -1, base_image.shape[-1])
-            result = result * mask + base_image * (1 - mask)
+
+            if mask.size() != base_image.size():
+                print(f"WARN: Mask size {mask.size()} is different from image size {base_image.size()}, mask is ignored")
+            else:
+                result = result * mask + base_image * (1 - mask)
 
         result = torch.clamp(result, 0, 1)
         return (result,)
