@@ -60,7 +60,6 @@ https://github.com/user-attachments/assets/9867ac6e-d402-431e-b5cb-6337e5213e31
 ## Installation
 You need [comfyui](https://github.com/comfyanonymous/ComfyUI) installed first.  
 Then you can download or git clone this repository inside ComfyUI/custom_nodes/ directory.  
-#Alternatively, you can use the [Manager](https://github.com/ltdrdata/ComfyUI-Manager) to install it.
 
 ## Contribution and troubleshooting
 If you have any issues with the node, feel free to open a github issue.  
