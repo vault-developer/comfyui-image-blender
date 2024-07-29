@@ -12,6 +12,11 @@ class ImageBlender:
             "required": {
                 "base_image": ("IMAGE",),
                 "blend_image": ("IMAGE",),
+                "opacity": ("FLOAT", {
+                    "default": 1,
+                    "min": 0.0,
+                    "max": 1.0
+                }),
                 "blend_mode": (
                     [mode.value for mode in BlendModes],
                     {"default": BlendModes.NORMAL.value}
@@ -26,11 +31,9 @@ class ImageBlender:
     FUNCTION = "blend"
     CATEGORY = "ImageBlender"
 
-    def blend(self, base_image: torch.Tensor, blend_image: torch.Tensor, blend_mode: str, mask: torch.Tensor = None) -> tuple:
+    def blend(self, base_image: torch.Tensor, blend_image: torch.Tensor, opacity: float, blend_mode: str, mask: torch.Tensor = None) -> tuple:
         blend_function = self.blend_functions.get(BlendModes(blend_mode), lambda x, y: x)
         result = blend_function(base_image, blend_image)
-
-        print(mask.shape)
 
         if mask is not None:
             # Ensure mask has the same number of channels as the images
@@ -42,6 +45,9 @@ class ImageBlender:
             else:
                 result = result * mask + base_image * (1 - mask)
 
+        # Apply opacity
+        result = base_image * opacity + result * (1 - opacity)
+        # Normalize the result
         result = torch.clamp(result, 0, 1)
         return (result,)
 
