@@ -1,5 +1,3 @@
-from torchgen.api.functionalization import base_binding
-
 from ..helpers import replace_zeros
 from ..blend_modes_enum import BlendModes
 import torch
