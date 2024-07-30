@@ -1,3 +1,5 @@
+from torchgen.api.functionalization import base_binding
+
 from ..helpers import replace_zeros
 from ..blend_modes_enum import BlendModes
 import torch
@@ -16,11 +18,13 @@ def arithmetic_inverse_subtract(base_image: torch.Tensor, blend_image: torch.Ten
     result = blend_image - inverted_base_image
     return torch.clamp(result, 0.0, 1.0)
 
-def arithmetic_multiply(_, blend_image: torch.Tensor) -> torch.Tensor:
-    return blend_image
+def arithmetic_multiply(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    result = base_image * blend_image
+    return torch.clamp(result, 0.0, 1.0)
 
-def arithmetic_subtract(_, blend_image: torch.Tensor) -> torch.Tensor:
-    return blend_image
+def arithmetic_subtract(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    result = base_image - blend_image
+    return torch.clamp(result, 0.0, 1.0)
 
 arithmetic_blend_functions = {
     BlendModes.ARITHMETIC_ADDITION: arithmetic_addition,
