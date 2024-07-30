@@ -11,8 +11,10 @@ def arithmetic_divide(base_image: torch.Tensor, blend_image: torch.Tensor) -> to
     safe_result = base_image / safe_blend_image
     return torch.clamp(safe_result, 0.0, 1.0)
 
-def arithmetic_inverse_subtract(_, blend_image: torch.Tensor) -> torch.Tensor:
-    return blend_image
+def arithmetic_inverse_subtract(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    inverted_base_image = 1 - base_image
+    result = blend_image - inverted_base_image
+    return torch.clamp(result, 0.0, 1.0)
 
 def arithmetic_multiply(_, blend_image: torch.Tensor) -> torch.Tensor:
     return blend_image
