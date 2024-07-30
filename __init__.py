@@ -1,6 +1,6 @@
 import torch
 
-from blend_modes.index import blend_functions
+from .blend_modes.index import blend_functions
 from .blend_modes_enum import BlendModes
 
 class ImageBlender:
