@@ -3,8 +3,8 @@ from ..blend_modes_enum import BlendModes
 import torch
 
 def darken_burn(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-    safe_blend_image = replace_zeros(blend_image)
-    result = 1 - (1 - blend_image) / base_image
+    safe_base_image = replace_zeros(base_image)
+    result = 1 - (1 - blend_image) / safe_base_image
     return torch.clamp(result, 0.0, 1.0)
 
 def darken_darken(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
