@@ -1,54 +1,30 @@
-from ..helpers import replace_zeros
 from ..blend_modes_enum import BlendModes
 import torch
 
-def darken_burn(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-    safe_base_image = replace_zeros(base_image)
-    result = 1 - (1 - blend_image) / safe_base_image
-    return torch.clamp(result, 0.0, 1.0)
+def hsi_increase_intensity(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    def get_intensity(image: torch.Tensor) -> torch.Tensor:
+        return torch.mean(image, dim=-1)
 
-def darken_darken(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-    result = torch.min(base_image, blend_image)
-    return torch.clamp(result, 0.0, 1.0)
+    def add_intensity(rgb: torch.Tensor, light: torch.Tensor) -> torch.Tensor:
+        rgb = rgb + light.unsqueeze(-1)
+        # There is an additional logic in Krita, but I'm not sure if it's necessary
+        # https://github.com/KDE/krita/blob/6324ca44615fa33957c9d96fdfb16b58d4fe6674/libs/pigment/KoColorSpaceMaths.h#L800
+        return rgb.clamp(0, 1)
 
-def darken_darker_color(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-    base_sum = torch.sum(base_image, dim=-1, keepdim=True)
-    blend_sum = torch.sum(blend_image, dim=-1, keepdim=True)
-    return torch.where(base_sum < blend_sum, base_image, blend_image)
+    assert base_image.shape == blend_image.shape, "Base and blend images must have the same shape"
+    assert base_image.shape[-1] == 3, "Input images must have 3 channels (RGB)"
 
-def darken_easy_burn(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-    inverted_base_image = 1.0 - base_image
-    safe_inverted_base_image = replace_zeros(inverted_base_image)
-    result = 1.0 - torch.pow(safe_inverted_base_image, blend_image * (15 / 13))
-    return torch.clamp(result, 0.0, 1.0)
+    blend_image_lightness = get_intensity(blend_image)
+    result = add_intensity(base_image, blend_image_lightness)
+    return result.clamp(0, 1)
 
-def darken_fog_darken(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-    result_low = (1 - base_image) * base_image + base_image * blend_image
-    result_high = base_image * blend_image + base_image - torch.pow(base_image, 2)
-    result = torch.where(base_image < 0.5, result_low, result_high)
-    return torch.clamp(result, 0.0, 1.0)
-
-def darken_gamma_dark(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-    safe_base_image =replace_zeros(base_image)
-    result = torch.pow(blend_image, 1.0 / safe_base_image)
-    result = torch.where(base_image == 0.0, torch.zeros_like(result), result)
-    return torch.clamp(result, 0.0, 1.0)
-
-def darken_linear_burn(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-    result = base_image + blend_image - 1
-    return torch.clamp(result, 0.0, 1.0)
-
-def darken_shade(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-    result = 1.0 - ((1.0 - blend_image) * base_image + torch.sqrt(1.0 - base_image))
-    return torch.clamp(result, 0.0, 1.0)
-
-darken_blend_functions = {
-    BlendModes.DARKEN_BURN: darken_burn,
-    BlendModes.DARKEN_DARKEN: darken_darken,
-    BlendModes.DARKEN_DARKER_COLOR: darken_darker_color,
-    BlendModes.DARKEN_EASY_BURN: darken_easy_burn,
-    BlendModes.DARKEN_FOG_DARKEN: darken_fog_darken,
-    BlendModes.DARKEN_GAMMA_DARK: darken_gamma_dark,
-    BlendModes.DARKEN_LINEAR_BURN: darken_linear_burn,
-    BlendModes.DARKEN_SHADE: darken_shade,
+hsi_blend_functions = {
+    #BlendModes.HSI_COLOR: hsi_color,
+    # BlendModes.HSI_HUE: hsi_hue,
+    # BlendModes.HSI_SATURATION: hsi_saturation,
+    # BlendModes.HSI_INTENSITY: hsi_intensity,
+    # BlendModes.HSI_DECREASE_SATURATION: hsi_decrease_saturation,
+    # BlendModes.HSI_INCREASE_SATURATION: hsi_increase_saturation,
+    # BlendModes.HSI_DECREASE_INTENSITY: hsi_decrease_intensity,
+    BlendModes.HSI_INCREASE_INTENSITY: hsi_increase_intensity,
 }
