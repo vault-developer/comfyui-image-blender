@@ -1,4 +1,4 @@
-from ..helpers import get_intensity, add_intensity, get_saturation_hsi, set_intensity, set_saturation_hsi
+from .hsi_helpers import get_intensity, add_intensity, get_saturation_hsi, set_intensity, set_saturation_hsi
 from ..blend_modes_enum import BlendModes
 import torch
 

@@ -1,4 +1,4 @@
-from ..helpers import get_lightness, set_lightness, get_saturation_hsl, set_saturation_hsl, add_lightness
+from .hsl_helpers import get_lightness, set_lightness, get_saturation_hsl, set_saturation_hsl, add_lightness
 from ..blend_modes_enum import BlendModes
 import torch
 
