@@ -64,9 +64,18 @@ def hsi_color(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tens
     result = set_intensity(blend_image, base_image_intensity)
     return result.clamp(0, 1)
 
+def hsi_hue(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    base_image_saturation = get_saturation_hsi(base_image)
+    base_image_lightness = get_intensity(base_image)
+
+    result = blend_image.clone()
+    result = set_saturation_hsi(result, base_image_saturation)
+    result = set_intensity(result, base_image_lightness)
+    return result.clamp(0, 1)
+
 hsi_blend_functions = {
     BlendModes.HSI_COLOR: hsi_color,
-    # BlendModes.HSI_HUE: hsi_hue,
+    BlendModes.HSI_HUE: hsi_hue,
     BlendModes.HSI_SATURATION: hsi_saturation,
     BlendModes.HSI_INTENSITY: hsi_intensity,
     BlendModes.HSI_DECREASE_SATURATION: hsi_decrease_saturation,
