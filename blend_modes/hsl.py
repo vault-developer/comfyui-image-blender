@@ -2,14 +2,14 @@ from ..helpers import get_lightness, set_lightness, get_saturation_hsl, set_satu
 from ..blend_modes_enum import BlendModes
 import torch
 
-# def hsi_intensity(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-#     assert base_image.shape == blend_image.shape, "Base and blend images must have the same shape"
-#     assert base_image.shape[-1] == 3, "Input images must have 3 channels (RGB)"
-#
-#     blend_image_lightness = get_intensity(blend_image)
-#     result = set_intensity(base_image, blend_image_lightness)
-#     return result.clamp(0, 1)
-#
+def hsl_lightness(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    assert base_image.shape == blend_image.shape, "Base and blend images must have the same shape"
+    assert base_image.shape[-1] == 3, "Input images must have 3 channels (RGB)"
+
+    blend_image_lightness = get_lightness(blend_image)
+    result = set_lightness(base_image, blend_image_lightness)
+    return result.clamp(0, 1)
+
 # def hsi_increase_intensity(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
 #     assert base_image.shape == blend_image.shape, "Base and blend images must have the same shape"
 #     assert base_image.shape[-1] == 3, "Input images must have 3 channels (RGB)"
@@ -77,7 +77,7 @@ hsl_blend_functions = {
     BlendModes.HSL_COLOR: hsl_color,
     BlendModes.HSL_HUE: hsl_hue,
     BlendModes.HSL_SATURATION: hsl_saturation,
-    # BlendModes.HSL_LIGHTNESS: hsi_intensity,
+    BlendModes.HSL_LIGHTNESS: hsl_lightness,
     # BlendModes.HSL_DECREASE_SATURATION: hsi_decrease_saturation,
     # BlendModes.HSL_INCREASE_SATURATION: hsi_increase_saturation,
     # BlendModes.HSL_DECREASE_LIGHTNESS: hsi_decrease_intensity,
