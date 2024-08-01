@@ -103,3 +103,43 @@ def set_saturation_hsi(image: torch.Tensor, new_saturation: torch.Tensor) -> tor
     )
 
     return result.clamp(0, 1)
+
+def get_saturation_hsl(image: torch.Tensor) -> torch.Tensor:
+    max_vals, _ = torch.max(image, dim=-1, keepdim=True)
+    min_vals, _ = torch.min(image, dim=-1, keepdim=True)
+
+    chroma = max_vals - min_vals
+    lightness = get_lightness(image)
+    divisor = 1.0 - torch.abs(2.0 * lightness.unsqueeze(-1) - 1.0)
+
+    saturation = torch.where(
+        divisor > 1e-8,
+        chroma / divisor,
+        torch.zeros_like(chroma)
+    )
+
+    return saturation.squeeze(-1).clamp(0, 1)
+
+def set_saturation_hsl(image: torch.Tensor, new_saturation: torch.Tensor) -> torch.Tensor:
+    result = image.clone()
+
+    min_idx = torch.argmin(result, dim=-1, keepdim=True)
+    max_idx = torch.argmax(result, dim=-1, keepdim=True)
+    mid_idx = torch.where(min_idx == max_idx, min_idx, 3 - min_idx - max_idx)
+
+    min_val = torch.gather(result, -1, min_idx)
+    mid_val = torch.gather(result, -1, mid_idx)
+    max_val = torch.gather(result, -1, max_idx)
+
+    result.scatter_(-1, min_idx, torch.zeros_like(min_val))
+    result.scatter_(-1, mid_idx, ((mid_val - min_val) * new_saturation.unsqueeze(-1)) / replace_zeros(max_val - min_val))
+    result.scatter_(-1, max_idx, new_saturation.unsqueeze(-1))
+
+    # manage zeros
+    result = torch.where(
+        (max_val - min_val) > 0,
+        result,
+        torch.zeros_like(result)
+    )
+
+    return result.clamp(0, 1)

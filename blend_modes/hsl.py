@@ -1,4 +1,4 @@
-from ..helpers import get_lightness, set_lightness
+from ..helpers import get_lightness, set_lightness, get_saturation_hsl, set_saturation_hsl
 from ..blend_modes_enum import BlendModes
 import torch
 
@@ -64,18 +64,18 @@ def hsl_color(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tens
     result = set_lightness(blend_image, base_image_intensity)
     return result.clamp(0, 1)
 
-# def hsi_hue(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-#     base_image_saturation = get_saturation_hsi(base_image)
-#     base_image_lightness = get_intensity(base_image)
-#
-#     result = blend_image.clone()
-#     result = set_saturation_hsi(result, base_image_saturation)
-#     result = set_intensity(result, base_image_lightness)
-#     return result.clamp(0, 1)
+def hsl_hue(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    base_image_saturation = get_saturation_hsl(base_image)
+    base_image_lightness = get_lightness(base_image)
+
+    result = blend_image.clone()
+    result = set_saturation_hsl(result, base_image_saturation)
+    result = set_lightness(result, base_image_lightness)
+    return result.clamp(0, 1)
 
 hsl_blend_functions = {
     BlendModes.HSL_COLOR: hsl_color,
-    # BlendModes.HSL_HUE: hsi_hue,
+    BlendModes.HSL_HUE: hsl_hue,
     # BlendModes.HSL_SATURATION: hsi_saturation,
     # BlendModes.HSL_LIGHTNESS: hsi_intensity,
     # BlendModes.HSL_DECREASE_SATURATION: hsi_decrease_saturation,
