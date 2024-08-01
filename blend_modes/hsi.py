@@ -38,13 +38,26 @@ def hsi_increase_saturation(base_image: torch.Tensor, blend_image: torch.Tensor)
 
     return result.clamp(0, 1)
 
+def hsi_decrease_saturation(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    base_image_saturation = get_saturation_hsi(base_image)
+    blend_image_saturation = get_saturation_hsi(blend_image)
+
+    new_saturation = torch.lerp(torch.zeros_like(base_image_saturation), base_image_saturation, blend_image_saturation)
+
+    base_image_lightness = get_intensity(base_image)
+
+    result = set_saturation_hsi(base_image, new_saturation)
+    result = set_intensity(result, base_image_lightness)
+
+    return result.clamp(0, 1)
+
 
 hsi_blend_functions = {
     #BlendModes.HSI_COLOR: hsi_color,
     # BlendModes.HSI_HUE: hsi_hue,
     BlendModes.HSI_SATURATION: hsi_saturation,
     # BlendModes.HSI_INTENSITY: hsi_intensity,
-    # BlendModes.HSI_DECREASE_SATURATION: hsi_decrease_saturation,
+    BlendModes.HSI_DECREASE_SATURATION: hsi_decrease_saturation,
     BlendModes.HSI_INCREASE_SATURATION: hsi_increase_saturation,
     BlendModes.HSI_DECREASE_INTENSITY: hsi_decrease_intensity,
     BlendModes.HSI_INCREASE_INTENSITY: hsi_increase_intensity,
