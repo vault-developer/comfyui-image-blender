@@ -5,6 +5,7 @@ from .darken import darken_blend_functions
 from .hsi import hsi_blend_functions
 from .hsl import hsl_blend_functions
 from .hsv import hsv_blend_functions
+from .hsy import hsy_blend_functions
 
 blend_functions = {}
 
@@ -15,3 +16,4 @@ blend_functions.update(darken_blend_functions)
 blend_functions.update(hsi_blend_functions)
 blend_functions.update(hsl_blend_functions)
 blend_functions.update(hsv_blend_functions)
+blend_functions.update(hsy_blend_functions)
