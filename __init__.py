@@ -34,6 +34,9 @@ class ImageBlender:
     CATEGORY = "ImageBlender"
 
     def blend(self, base_image: torch.Tensor, blend_image: torch.Tensor, strength: float, blend_mode: str, mask: torch.Tensor = None) -> tuple:
+        assert base_image.shape == blend_image.shape, "Base and blend images must have the same shape"
+        assert base_image.shape[-1] == 3, "Input images must have 3 channels (RGB)"
+
         blend_function = self.blend_functions.get(BlendModes(blend_mode), lambda x, y: x)
         result = blend_function(base_image, blend_image)
 

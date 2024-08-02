@@ -3,25 +3,16 @@ from ..blend_modes_enum import BlendModes
 import torch
 
 def hsl_lightness(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-    assert base_image.shape == blend_image.shape, "Base and blend images must have the same shape"
-    assert base_image.shape[-1] == 3, "Input images must have 3 channels (RGB)"
-
     blend_image_lightness = get_lightness(blend_image)
     result = set_lightness(base_image, blend_image_lightness)
     return result.clamp(0, 1)
 
 def hsl_increase_lightness(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-    assert base_image.shape == blend_image.shape, "Base and blend images must have the same shape"
-    assert base_image.shape[-1] == 3, "Input images must have 3 channels (RGB)"
-
     blend_image_lightness = get_lightness(blend_image)
     result = add_lightness(base_image, blend_image_lightness)
     return result.clamp(0, 1)
 
 def hsl_decrease_lightness(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-    assert base_image.shape == blend_image.shape, "Base and blend images must have the same shape"
-    assert base_image.shape[-1] == 3, "Input images must have 3 channels (RGB)"
-
     blend_image_lightness = get_lightness(blend_image) - 1
     result = add_lightness(base_image, blend_image_lightness)
     return result.clamp(0, 1)
