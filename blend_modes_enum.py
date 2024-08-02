@@ -14,7 +14,7 @@ class BlendModes(Enum):
     LIGHTEN_HARD_LIGHT = "lighten: hard light"
     LIGHTEN_SOFT_LIGHT_IFS_ILLUSIONS = "lighten: soft light (ifs illusions)"
     LIGHTEN_SOFT_LIGHT_PEGTOP_DELPHI = "lighten: soft light (pegtop-delphi)"
-    LIGHTEN_SOFT_LIGHT_PHOTOSHOP = "lighten: soft light (photoshop)"
+    LIGHTEN_SOFT_LIGHT_PS = "lighten: soft light (ps)"
     LIGHTEN_SOFT_LIGHT_SVG = "lighten: soft light (svg)"
     LIGHTEN_GAMMA_LIGHT = "lighten: gamma light"
     LIGHTEN_GAMMA_ILLUMINATION = "lighten: gamma illumination"

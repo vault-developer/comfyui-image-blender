@@ -1,3 +1,4 @@
+from .darken import darken_gamma_dark
 from .lighten_helpers import penumbra
 from ..blend_modes_enum import BlendModes
 import torch
@@ -76,6 +77,69 @@ def lighten_flat_light(base_image: torch.Tensor, blend_image: torch.Tensor) -> t
 
     return result
 
+def lighten_hard_light(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    ones = torch.ones_like(blend_image)
+    sum = blend_image + blend_image
+
+    screen_result = torch.where(
+        blend_image > 0.5,
+        base_image + sum - ones - base_image * (sum - ones),
+        torch.zeros_like(base_image)
+    )
+
+    multiply_result = torch.where(
+        blend_image <= 0.5,
+        base_image * sum,
+        torch.zeros_like(base_image)
+    )
+
+    return torch.clamp(screen_result + multiply_result, 0.0, 1.0)
+
+def lighten_soft_light_ifs_illusions(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    exponent = torch.pow(2.0, 2.0 * (0.5 - blend_image))
+    result = torch.pow(base_image, exponent)
+
+    return torch.clamp(result, 0.0, 1.0)
+
+def lighten_soft_light_pegtop_delphi(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    term1 = base_image * lighten_screen(blend_image, base_image)
+    term2 = blend_image * base_image * (1 - base_image)
+
+    result = lighten_linear_dodge(term1, term2)
+    return torch.clamp(result, 0.0, 1.0)
+
+def lighten_soft_light_ps(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    condition = blend_image > 0.5
+    high_result = base_image + (2 * blend_image - 1) * (torch.sqrt(base_image) - base_image)
+    low_result = base_image - (1 - 2 * blend_image) * base_image * (1 - base_image)
+    result = torch.where(condition, high_result, low_result)
+    return torch.clamp(result, 0.0, 1.0)
+
+def lighten_soft_light_svg(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    condition_src = blend_image > 0.5
+    condition_dst = base_image > 0.25
+
+    D_high = torch.sqrt(base_image)
+    D_low = ((16.0 * base_image - 12.0) * base_image + 4.0) * base_image
+    D = torch.where(condition_dst, D_high, D_low)
+
+    high_result = base_image + (2.0 * blend_image - 1.0) * (D - base_image)
+    low_result = base_image - (1.0 - 2.0 * blend_image) * base_image * (1.0 - base_image)
+
+    result = torch.where(condition_src, high_result, low_result)
+    return torch.clamp(result, 0.0, 1.0)
+
+def lighten_gamma_light(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    result = torch.pow(base_image, blend_image)
+    return torch.clamp(result, 0.0, 1.0)
+
+def lighten_gamma_illumination(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    inv_base = 1.0 - base_image
+    inv_blend = 1.0 - blend_image
+
+    result = 1 - darken_gamma_dark(inv_blend, inv_base)
+    return torch.clamp(result, 0.0, 1.0)
+
 lighten_blend_functions = {
     BlendModes.LIGHTEN_COLOR_DODGE: lighten_color_dodge,
     BlendModes.LIGHTEN_LINEAR_DODGE: lighten_linear_dodge,
@@ -85,13 +149,13 @@ lighten_blend_functions = {
     BlendModes.LIGHTEN_PIN_LIGHT: lighten_pin_light,
     BlendModes.LIGHTEN_VIVID_LIGHT: lighten_vivid_light,
     BlendModes.LIGHTEN_FLAT_LIGHT: lighten_flat_light,
-    # BlendModes.LIGHTEN_HARD_LIGHT: lighten_color_dodge,
-    # BlendModes.LIGHTEN_SOFT_LIGHT_IFS_ILLUSIONS: lighten_color_dodge,
-    # BlendModes.LIGHTEN_SOFT_LIGHT_PEGTOP_DELPHI: lighten_color_dodge,
-    # BlendModes.LIGHTEN_SOFT_LIGHT_PHOTOSHOP: lighten_color_dodge,
-    # BlendModes.LIGHTEN_SOFT_LIGHT_SVG: lighten_color_dodge,
-    # BlendModes.LIGHTEN_GAMMA_LIGHT: lighten_color_dodge,
-    # BlendModes.LIGHTEN_GAMMA_ILLUMINATION: lighten_color_dodge,
+    BlendModes.LIGHTEN_HARD_LIGHT: lighten_hard_light,
+    BlendModes.LIGHTEN_SOFT_LIGHT_IFS_ILLUSIONS: lighten_soft_light_ifs_illusions,
+    BlendModes.LIGHTEN_SOFT_LIGHT_PEGTOP_DELPHI: lighten_soft_light_pegtop_delphi,
+    BlendModes.LIGHTEN_SOFT_LIGHT_PS: lighten_soft_light_ps,
+    BlendModes.LIGHTEN_SOFT_LIGHT_SVG: lighten_soft_light_svg,
+    BlendModes.LIGHTEN_GAMMA_LIGHT: lighten_gamma_light,
+    BlendModes.LIGHTEN_GAMMA_ILLUMINATION: lighten_gamma_illumination,
     # BlendModes.LIGHTEN_LIGHTER_COLOR: lighten_color_dodge,
     # BlendModes.LIGHTEN_PNORM_A: lighten_color_dodge,
     # BlendModes.LIGHTEN_PNORM_B: lighten_color_dodge,
