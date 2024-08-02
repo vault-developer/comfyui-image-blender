@@ -1,5 +1,6 @@
-from .hsv_helpers import get_value, set_value, get_saturation_hsv, set_saturation_hsv, add_value
+from .hsv_helpers import get_value, set_value, get_saturation_hsv, add_value
 from ..blend_modes_enum import BlendModes
+from ..helpers import set_saturation
 import torch
 
 def hsv_value(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
@@ -20,7 +21,7 @@ def hsv_decrease_value(base_image: torch.Tensor, blend_image: torch.Tensor) -> t
 def hsv_saturation(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
     intensity = get_value(base_image)
     saturation = get_saturation_hsv(blend_image)
-    result = set_saturation_hsv(base_image, saturation)
+    result = set_saturation(base_image, saturation)
     result = set_value(result, intensity)
     return result.clamp(0, 1)
 
@@ -32,7 +33,7 @@ def hsv_increase_saturation(base_image: torch.Tensor, blend_image: torch.Tensor)
 
     base_image_lightness = get_value(base_image)
 
-    result = set_saturation_hsv(base_image, new_saturation)
+    result = set_saturation(base_image, new_saturation)
     result = set_value(result, base_image_lightness)
 
     return result.clamp(0, 1)
@@ -45,7 +46,7 @@ def hsv_decrease_saturation(base_image: torch.Tensor, blend_image: torch.Tensor)
 
     base_image_lightness = get_value(base_image)
 
-    result = set_saturation_hsv(base_image, new_saturation)
+    result = set_saturation(base_image, new_saturation)
     result = set_value(result, base_image_lightness)
 
     return result.clamp(0, 1)
@@ -60,7 +61,7 @@ def hsv_hue(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor
     base_image_lightness = get_value(base_image)
 
     result = blend_image.clone()
-    result = set_saturation_hsv(result, base_image_saturation)
+    result = set_saturation(result, base_image_saturation)
     result = set_value(result, base_image_lightness)
     return result.clamp(0, 1)
 

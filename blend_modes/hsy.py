@@ -1,4 +1,5 @@
-from .hsy_helpers import get_luminosity, set_luminosity, get_saturation_hsy, set_saturation_hsy, add_luminosity
+from .hsy_helpers import get_luminosity, set_luminosity, get_saturation_hsy, add_luminosity
+from ..helpers import set_saturation
 from ..blend_modes_enum import BlendModes
 import torch
 
@@ -20,7 +21,7 @@ def hsy_decrease_luminosity(base_image: torch.Tensor, blend_image: torch.Tensor)
 def hsy_saturation(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
     luminosity = get_luminosity(base_image)
     saturation = get_saturation_hsy(blend_image)
-    result = set_saturation_hsy(base_image, saturation)
+    result = set_saturation(base_image, saturation)
     result = set_luminosity(result, luminosity)
     return result.clamp(0, 1)
 
@@ -32,7 +33,7 @@ def hsy_increase_saturation(base_image: torch.Tensor, blend_image: torch.Tensor)
 
     base_image_luminosity = get_luminosity(base_image)
 
-    result = set_saturation_hsy(base_image, new_saturation)
+    result = set_saturation(base_image, new_saturation)
     result = set_luminosity(result, base_image_luminosity)
 
     return result.clamp(0, 1)
@@ -45,7 +46,7 @@ def hsy_decrease_saturation(base_image: torch.Tensor, blend_image: torch.Tensor)
 
     base_image_luminosity = get_luminosity(base_image)
 
-    result = set_saturation_hsy(base_image, new_saturation)
+    result = set_saturation(base_image, new_saturation)
     result = set_luminosity(result, base_image_luminosity)
 
     return result.clamp(0, 1)
@@ -60,7 +61,7 @@ def hsy_hue(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor
     base_image_luminosity = get_luminosity(base_image)
 
     result = blend_image.clone()
-    result = set_saturation_hsy(result, base_image_saturation)
+    result = set_saturation(result, base_image_saturation)
     result = set_luminosity(result, base_image_luminosity)
     return result.clamp(0, 1)
 
