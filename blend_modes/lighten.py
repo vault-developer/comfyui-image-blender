@@ -1,4 +1,5 @@
 from .darken import darken_gamma_dark
+from .hsy_helpers import get_luminosity
 from .lighten_helpers import penumbra
 from ..blend_modes_enum import BlendModes
 import torch
@@ -140,6 +141,58 @@ def lighten_gamma_illumination(base_image: torch.Tensor, blend_image: torch.Tens
     result = 1 - darken_gamma_dark(inv_blend, inv_base)
     return torch.clamp(result, 0.0, 1.0)
 
+def lighten_lighter_color(blend_image: torch.Tensor, base_image: torch.Tensor) -> torch.Tensor:
+    lum_base = get_luminosity(base_image)
+    lum_blend = get_luminosity(blend_image)
+
+    mask = lum_blend > lum_base
+    mask = mask.unsqueeze(-1).expand(-1, -1, -1, 3)
+
+    result = torch.where(mask, blend_image, base_image)
+    return torch.clamp(result, 0.0, 1.0)
+
+def lighten_pnorm_a(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    power_factor = 2.3333333333333333
+    inverse_power_factor = 0.428571428571434
+
+    src_power = torch.pow(blend_image, power_factor)
+    dst_power = torch.pow(base_image, power_factor)
+
+    sum_power = src_power + dst_power
+    result = torch.pow(sum_power, inverse_power_factor)
+
+    return result.clamp(0, 1)
+
+def lighten_pnorm_b(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    power_factor = 4.0
+    inverse_power_factor = 0.25
+
+    src_power = torch.pow(blend_image, power_factor)
+    dst_power = torch.pow(base_image, power_factor)
+
+    sum_power = src_power + dst_power
+    result = torch.pow(sum_power, inverse_power_factor)
+
+    return result.clamp(0, 1)
+
+
+def lighten_super_light(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    def pow_tensor(tensor, power):
+        return torch.pow(tensor, power)
+
+    def inv(tensor):
+        return 1.0 - tensor
+
+    power_val = 2.875
+
+    result = torch.where(
+        blend_image < 0.5,
+        inv(pow_tensor(pow_tensor(inv(base_image), power_val) + pow_tensor(inv(2.0 * blend_image), power_val), 1.0 / power_val)),
+        pow_tensor(pow_tensor(base_image, power_val) + pow_tensor(2.0 * blend_image - 1.0, power_val), 1.0 / power_val)
+    )
+
+    return result.clamp(0, 1)
+
 lighten_blend_functions = {
     BlendModes.LIGHTEN_COLOR_DODGE: lighten_color_dodge,
     BlendModes.LIGHTEN_LINEAR_DODGE: lighten_linear_dodge,
@@ -156,10 +209,10 @@ lighten_blend_functions = {
     BlendModes.LIGHTEN_SOFT_LIGHT_SVG: lighten_soft_light_svg,
     BlendModes.LIGHTEN_GAMMA_LIGHT: lighten_gamma_light,
     BlendModes.LIGHTEN_GAMMA_ILLUMINATION: lighten_gamma_illumination,
-    # BlendModes.LIGHTEN_LIGHTER_COLOR: lighten_color_dodge,
-    # BlendModes.LIGHTEN_PNORM_A: lighten_color_dodge,
-    # BlendModes.LIGHTEN_PNORM_B: lighten_color_dodge,
-    # BlendModes.LIGHTEN_SUPER_LIGHT: lighten_color_dodge,
+    BlendModes.LIGHTEN_LIGHTER_COLOR: lighten_lighter_color,
+    BlendModes.LIGHTEN_PNORM_A: lighten_pnorm_a,
+    BlendModes.LIGHTEN_PNORM_B: lighten_pnorm_b,
+    BlendModes.LIGHTEN_SUPER_LIGHT: lighten_super_light,
     # BlendModes.LIGHTEN_TINT_IFS_ILLUSIONS: lighten_color_dodge,
     # BlendModes.LIGHTEN_FOG_LIGHTEN_IFS_ILLUSIONS: lighten_color_dodge,
     # BlendModes.LIGHTEN_EASY_DODGE: lighten_color_dodge,
