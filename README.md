@@ -160,8 +160,7 @@ Then you can download or git clone this repository inside ComfyUI/custom_nodes/ 
 
 ## Contribution and troubleshooting
 This is rough implementation, I will appreciate any feedback.  
-Feel free to raise issue if you spot any mistake or have any suggestion.  
-Any ideas and improvements are welcome.   
+Feel free to raise issue if you spot any mistake or have a suggestion.
 
 If you want to contribute, feel free to fork this repository and create a pull request.  
 There are still 45 blending modes to be added, so you can help with that.
