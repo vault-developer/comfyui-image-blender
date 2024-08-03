@@ -1,33 +1,19 @@
-from ..helpers import replace_zeros
 from ..blend_modes_enum import BlendModes
 import torch
 
-def arithmetic_addition(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-    result = base_image + blend_image
-    return torch.clamp(result, 0.0, 1.0)
+def modulo_modulo(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    result = torch.fmod(blend_image, base_image)
+    return result
 
-def arithmetic_divide(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-    safe_blend_image = replace_zeros(blend_image)
-    safe_result = base_image / safe_blend_image
-    return torch.clamp(safe_result, 0.0, 1.0)
+def modulo_divisive_modulo(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    result = torch.where(
+        base_image == 0,
+        torch.fmod((1.0 / 1e-10) * blend_image, 1.0),
+        torch.fmod((1.0 / base_image) * blend_image, 1.0)
+    )
+    return result
 
-def arithmetic_inverse_subtract(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-    inverted_base_image = 1 - base_image
-    result = blend_image - inverted_base_image
-    return torch.clamp(result, 0.0, 1.0)
-
-def arithmetic_multiply(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-    result = base_image * blend_image
-    return torch.clamp(result, 0.0, 1.0)
-
-def arithmetic_subtract(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
-    result = base_image - blend_image
-    return torch.clamp(result, 0.0, 1.0)
-
-arithmetic_blend_functions = {
-    BlendModes.ARITHMETIC_ADDITION: arithmetic_addition,
-    BlendModes.ARITHMETIC_DIVIDE: arithmetic_divide,
-    BlendModes.ARITHMETIC_INVERSE_SUBTRACT: arithmetic_inverse_subtract,
-    BlendModes.ARITHMETIC_MULTIPLY: arithmetic_multiply,
-    BlendModes.ARITHMETIC_SUBTRACT: arithmetic_subtract,
+modulo_blend_functions = {
+    BlendModes.MODULO_MODULO: modulo_modulo,
+    BlendModes.MODULO_DIVISIVE_MODULO: modulo_divisive_modulo,
 }

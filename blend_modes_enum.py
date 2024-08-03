@@ -1,6 +1,5 @@
 from enum import Enum
 
-# Enum class for blend modes
 # Commented out blend modes are not implemented yet
 class BlendModes(Enum):
     ARITHMETIC_ADDITION = "arithmetic: addition"
@@ -125,9 +124,9 @@ class BlendModes(Enum):
     # MIX_PENUMBRA_C = "mix: penumbra c"
     # MIX_PENUMBRA_D = "mix: penumbra d"
 
-    # MODULO_MODULO = "modulo: modulo"
+    MODULO_MODULO = "modulo: modulo"
+    MODULO_DIVISIVE_MODULO = "modulo: divisive modulo"
     # MODULO_MODULO_CONTINUOUS = "modulo: modulo - continuous"
-    # MODULO_DIVISIVE_MODULO = "modulo: divisive modulo"
     # MODULO_DIVISIVE_MODULO_CONTINUOUS = "modulo: divisive modulo - continuous"
     # MODULO_MODULO_SHIFT = "modulo: modulo shift"
     # MODULO_MODULO_SHIFT_CONTINUOUS = "modulo: modulo shift - continuous"
