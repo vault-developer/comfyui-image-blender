@@ -2,7 +2,7 @@
 
 ## About
 ```ComfyuiImageBlender``` is a custom node for ComfyUI.  
-You can use it to blend two images together using various modes.
+You can use it to blend two images together using various modes.  
 Currently, 88 blending modes are supported and 45 more are planned to be added.  
 Modes logic were borrowed from / inspired by [Krita](https://github.com/KDE/krita) blending modes.
 
