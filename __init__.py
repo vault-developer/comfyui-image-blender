@@ -21,7 +21,7 @@ class ImageBlender:
                 }),
                 "blend_mode": (
                     [mode.value for mode in BlendModes],
-                    {"default": BlendModes.NORMAL.value}
+                    {"default": BlendModes.MIX_NORMAL.value}
                 ),
             },
             "optional": {
