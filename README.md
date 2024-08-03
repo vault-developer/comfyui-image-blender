@@ -152,7 +152,7 @@ Features:
 ## Comfyui workflow
 Feel free to check the example workflow [here](https://github.com/vault-developer/comfyui-image-blender/blob/master/workfow.example.json).  
 
-https://github.com/user-attachments/assets/9867ac6e-d402-431e-b5cb-6337e5213e31
+https://github.com/user-attachments/assets/4b503e6a-cdff-4a3d-ac2b-a482ab0d7d8c
 
 ## Installation
 You need [comfyui](https://github.com/comfyanonymous/ComfyUI) installed first.  
