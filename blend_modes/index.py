@@ -7,6 +7,7 @@ from .hsv import hsv_blend_functions
 from .hsy import hsy_blend_functions
 from .lighten import lighten_blend_functions
 from .mix import mix_blend_functions
+from .negative import negative_blend_functions
 
 blend_functions = {}
 
@@ -19,3 +20,4 @@ blend_functions.update(hsv_blend_functions)
 blend_functions.update(hsy_blend_functions)
 blend_functions.update(lighten_blend_functions)
 blend_functions.update(mix_blend_functions)
+blend_functions.update(negative_blend_functions)
