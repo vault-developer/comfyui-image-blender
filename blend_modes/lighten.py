@@ -1,3 +1,4 @@
+from ..helpers import inv
 from .darken import darken_gamma_dark
 from .hsy_helpers import get_luminosity
 from .lighten_helpers import penumbra
@@ -193,6 +194,48 @@ def lighten_super_light(base_image: torch.Tensor, blend_image: torch.Tensor) -> 
 
     return result.clamp(0, 1)
 
+def lighten_tint_ifs_illusions(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    result = base_image * (1 - blend_image) + torch.sqrt(blend_image)
+    return result.clamp(0, 1)
+
+def lighten_fog_lighten_ifs_illusions(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    result = torch.where(
+        blend_image < 0.5,
+        inv(inv(blend_image) * blend_image) - inv(base_image) * inv(blend_image),
+        blend_image - inv(base_image) * inv(blend_image) + torch.pow(inv(blend_image), 2)
+    )
+
+    return result.clamp(0, 1)
+
+def lighten_easy_dodge(base_image: torch.Tensor, blend_image: torch.Tensor) -> torch.Tensor:
+    result = torch.where(
+        blend_image == 1.0,
+        torch.tensor(1.0, device=blend_image.device, dtype=blend_image.dtype),
+        torch.pow(base_image, inv(torch.where(blend_image != 1.0, blend_image, torch.tensor(0.999999999999, device=blend_image.device, dtype=blend_image.dtype))) * 1.039999999)
+    )
+
+    return result.clamp(0, 1)
+
+def lighten_luminosity_sai(src: torch.Tensor, dst: torch.Tensor) -> torch.Tensor:
+    # Check if alpha channel is present
+    has_alpha = src.shape[-1] == 4
+
+    if has_alpha:
+        src_rgb, src_a = src[..., :3], src[..., 3:]
+        dst_rgb, dst_a = dst[..., :3], dst[..., 3:]
+    else:
+        src_rgb, src_a = src, torch.ones_like(src[..., :1])
+        dst_rgb, dst_a = dst, torch.ones_like(dst[..., :1])
+
+    result_rgb = src_rgb * src_a + dst_rgb
+    result_rgb = torch.clamp(result_rgb, 0, 1)
+    if has_alpha:
+        result = torch.cat([result_rgb, dst_a], dim=-1)
+    else:
+        result = result_rgb
+
+    return result
+
 lighten_blend_functions = {
     BlendModes.LIGHTEN_COLOR_DODGE: lighten_color_dodge,
     BlendModes.LIGHTEN_LINEAR_DODGE: lighten_linear_dodge,
@@ -213,8 +256,8 @@ lighten_blend_functions = {
     BlendModes.LIGHTEN_PNORM_A: lighten_pnorm_a,
     BlendModes.LIGHTEN_PNORM_B: lighten_pnorm_b,
     BlendModes.LIGHTEN_SUPER_LIGHT: lighten_super_light,
-    # BlendModes.LIGHTEN_TINT_IFS_ILLUSIONS: lighten_color_dodge,
-    # BlendModes.LIGHTEN_FOG_LIGHTEN_IFS_ILLUSIONS: lighten_color_dodge,
-    # BlendModes.LIGHTEN_EASY_DODGE: lighten_color_dodge,
-    # BlendModes.LIGHTEN_LUMINOSITY_SAI: lighten_color_dodge,
+    BlendModes.LIGHTEN_TINT_IFS_ILLUSIONS: lighten_tint_ifs_illusions,
+    BlendModes.LIGHTEN_FOG_LIGHTEN_IFS_ILLUSIONS: lighten_fog_lighten_ifs_illusions,
+    BlendModes.LIGHTEN_EASY_DODGE: lighten_easy_dodge,
+    BlendModes.LIGHTEN_LUMINOSITY_SAI: lighten_luminosity_sai,
 }
