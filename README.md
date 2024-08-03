@@ -176,7 +176,7 @@ https://github.com/user-attachments/assets/4b503e6a-cdff-4a3d-ac2b-a482ab0d7d8c
 ## Installation
 You need [comfyui](https://github.com/comfyanonymous/ComfyUI) installed first.  
 Then several options are available:
-1. Then you can download or git clone this repository inside ComfyUI/custom_nodes/ directory.  
+1. You can download or git clone this repository inside ComfyUI/custom_nodes/ directory.  
 2. If you use comfy-cli, node can be also downloaded from [comfy registry](https://registry.comfy.org/publishers/vault-developer/nodes/comfyui-image-blender):  
 ```comfy node registry-install comfyui-image-blender```
 3. Comfy-ui manager support will be added when [this pull request](https://github.com/ltdrdata/ComfyUI-Manager/pull/925) is merged.
