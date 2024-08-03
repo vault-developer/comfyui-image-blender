@@ -1,63 +1,93 @@
 {
-  "last_node_id": 19,
-  "last_link_id": 39,
+  "last_node_id": 20,
+  "last_link_id": 47,
   "nodes": [
     {
-      "id": 19,
-      "type": "InvertMask",
+      "id": 18,
+      "type": "PreviewImage",
       "pos": [
-        -250,
-        -56
+        81,
+        -167
       ],
-      "size": [
-        267.3706041353247,
-        26
-      ],
+      "size": {
+        "0": 269.4472351074219,
+        "1": 416.9296569824219
+      },
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
       "inputs": [
         {
-          "name": "mask",
-          "type": "MASK",
-          "link": 37
+          "name": "images",
+          "type": "IMAGE",
+          "link": 35
         }
       ],
+      "title": "Preview Base Image",
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 9,
+      "type": "LoadImage",
+      "pos": [
+        358,
+        -236
+      ],
+      "size": {
+        "0": 270.3406982421875,
+        "1": 476.7440490722656
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
       "outputs": [
         {
-          "name": "MASK",
-          "type": "MASK",
+          "name": "IMAGE",
+          "type": "IMAGE",
           "links": [
-            38,
-            39
+            41
           ],
           "shape": 3,
           "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [],
+          "shape": 3,
+          "slot_index": 1
         }
       ],
+      "title": "Load Blend Image",
       "properties": {
-        "Node name for S&R": "InvertMask"
-      }
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "1.png",
+        "image"
+      ]
     },
     {
       "id": 16,
       "type": "MaskToImage",
       "pos": [
-        -247,
-        1
+        356,
+        284
       ],
-      "size": [
-        270.4665745943091,
-        26
-      ],
+      "size": {
+        "0": 270.4665832519531,
+        "1": 26
+      },
       "flags": {},
-      "order": 5,
+      "order": 4,
       "mode": 0,
       "inputs": [
         {
           "name": "mask",
           "type": "MASK",
-          "link": 39
+          "link": 47
         }
       ],
       "outputs": [
@@ -76,43 +106,18 @@
       }
     },
     {
-      "id": 18,
-      "type": "PreviewImage",
-      "pos": [
-        -541,
-        -57
-      ],
-      "size": {
-        "0": 287.4339294433594,
-        "1": 427.33221435546875
-      },
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 35
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "PreviewImage"
-      }
-    },
-    {
       "id": 17,
       "type": "PreviewImage",
       "pos": [
-        -257,
-        63
+        351,
+        349
       ],
-      "size": [
-        282.9549065438914,
-        314.74127066716915
-      ],
+      "size": {
+        "0": 275.3780517578125,
+        "1": 386.188720703125
+      },
       "flags": {},
-      "order": 7,
+      "order": 6,
       "mode": 0,
       "inputs": [
         {
@@ -126,82 +131,15 @@
       }
     },
     {
-      "id": 9,
-      "type": "LoadImage",
-      "pos": [
-        391,
-        -129
-      ],
-      "size": {
-        "0": 342.2591552734375,
-        "1": 552.3571166992188
-      },
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            28
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "MASK",
-          "type": "MASK",
-          "links": [],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LoadImage"
-      },
-      "widgets_values": [
-        "1.png",
-        "image"
-      ]
-    },
-    {
-      "id": 5,
-      "type": "PreviewImage",
-      "pos": [
-        736,
-        -6
-      ],
-      "size": {
-        "0": 347.20001220703125,
-        "1": 467.20001220703125
-      },
-      "flags": {
-        "collapsed": false
-      },
-      "order": 6,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 29
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "PreviewImage"
-      }
-    },
-    {
       "id": 2,
       "type": "LoadImage",
       "pos": [
-        36,
-        -120
+        81,
+        281
       ],
       "size": {
-        "0": 339.6591491699219,
-        "1": 544.7171020507812
+        "0": 259.80902099609375,
+        "1": 451.9725036621094
       },
       "flags": {},
       "order": 1,
@@ -211,8 +149,8 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            27,
-            35
+            35,
+            45
           ],
           "shape": 3,
           "slot_index": 0
@@ -221,49 +159,51 @@
           "name": "MASK",
           "type": "MASK",
           "links": [
-            37
+            46,
+            47
           ],
           "shape": 3,
           "slot_index": 1
         }
       ],
+      "title": "Load Base Image",
       "properties": {
         "Node name for S&R": "LoadImage"
       },
       "widgets_values": [
-        "clipspace/clipspace-mask-160179.69999998808.png [input]",
+        "clipspace/clipspace-mask-181041.70000000298.png [input]",
         "image"
       ]
     },
     {
-      "id": 15,
+      "id": 20,
       "type": "ImageBlender",
       "pos": [
-        737,
-        -137
+        628,
+        610
       ],
       "size": {
-        "0": 347.2661437988281,
-        "1": 98
+        "0": 487.8569030761719,
+        "1": 122
       },
       "flags": {},
-      "order": 4,
+      "order": 3,
       "mode": 0,
       "inputs": [
         {
           "name": "base_image",
           "type": "IMAGE",
-          "link": 27
+          "link": 45
         },
         {
           "name": "blend_image",
           "type": "IMAGE",
-          "link": 28
+          "link": 41
         },
         {
           "name": "mask",
           "type": "MASK",
-          "link": 38
+          "link": 46
         }
       ],
       "outputs": [
@@ -271,7 +211,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            29
+            44
           ],
           "shape": 3,
           "slot_index": 0
@@ -281,35 +221,40 @@
         "Node name for S&R": "ImageBlender"
       },
       "widgets_values": [
-        "soft light"
+        1,
+        "hsi: intensity"
       ]
+    },
+    {
+      "id": 5,
+      "type": "PreviewImage",
+      "pos": [
+        636,
+        -172
+      ],
+      "size": {
+        "0": 487.2989501953125,
+        "1": 743.5930786132812
+      },
+      "flags": {
+        "collapsed": false
+      },
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 44
+        }
+      ],
+      "title": "Preview Result",
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
     }
   ],
   "links": [
-    [
-      27,
-      2,
-      0,
-      15,
-      0,
-      "IMAGE"
-    ],
-    [
-      28,
-      9,
-      0,
-      15,
-      1,
-      "IMAGE"
-    ],
-    [
-      29,
-      15,
-      0,
-      5,
-      0,
-      "IMAGE"
-    ],
     [
       31,
       16,
@@ -327,25 +272,41 @@
       "IMAGE"
     ],
     [
-      37,
+      41,
+      9,
+      0,
+      20,
+      1,
+      "IMAGE"
+    ],
+    [
+      44,
+      20,
+      0,
+      5,
+      0,
+      "IMAGE"
+    ],
+    [
+      45,
+      2,
+      0,
+      20,
+      0,
+      "IMAGE"
+    ],
+    [
+      46,
       2,
       1,
-      19,
-      0,
-      "MASK"
-    ],
-    [
-      38,
-      19,
-      0,
-      15,
+      20,
       2,
       "MASK"
     ],
     [
-      39,
-      19,
-      0,
+      47,
+      2,
+      1,
       16,
       0,
       "MASK"
@@ -355,10 +316,10 @@
   "config": {},
   "extra": {
     "ds": {
-      "scale": 0.8264462809917354,
+      "scale": 0.7513148009015794,
       "offset": [
-        484.037099178199,
-        376.42158268827865
+        228.1861978759655,
+        275.64841254054596
       ]
     }
   },
