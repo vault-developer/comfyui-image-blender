@@ -149,10 +149,29 @@ Features:
   </ul>
 </details>
 
+
+## Examples:
+<details>
+  <summary>Addition</summary>
+  <img src="https://github.com/user-attachments/assets/600cd544-840a-49d1-98e6-c69801da31f2" alt="addition">
+</details>
+
+<details>
+  <summary>Darken</summary>
+  <img src="https://github.com/user-attachments/assets/f27aecc3-62dd-463b-8a2f-d3e7d75ac8ce" alt="darken">
+</details>
+
+<details>
+  <summary>Saturation HSV</summary>
+  <img src="https://github.com/user-attachments/assets/1aae01b3-426e-4898-8092-74cc7858914d" alt="saturation_hsv">
+</details>
+
+
 ## Comfyui workflow
 Feel free to check the example workflow [here](https://github.com/vault-developer/comfyui-image-blender/blob/master/workfow.example.json).  
 
 https://github.com/user-attachments/assets/4b503e6a-cdff-4a3d-ac2b-a482ab0d7d8c
+
 
 ## Installation
 You need [comfyui](https://github.com/comfyanonymous/ComfyUI) installed first.  
@@ -165,6 +184,7 @@ Feel free to raise issue if you spot any mistake or have a suggestion.
 
 If you want to contribute, feel free to fork this repository and create a pull request.  
 There are still 45 blending modes to be added, so you can help with that.
+
 
 ## Future plans
 There are still some things to be done:
