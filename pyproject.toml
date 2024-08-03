@@ -2,7 +2,7 @@
 name = "comfyui-image-blender"
 description = "A custom node to blend two images together using a specified blending mode."
 version = "1.1.0"
-license = "LICENSE"
+license = { file = "LICENSE" }
 
 [project.urls]
 Repository = "https://github.com/vault-developer/comfyui-image-blender"
